@@ -1,0 +1,28 @@
+pkgname=gsfonts-otf
+_name=urw-base35-fonts
+version=20200910
+revision=1
+wrksrc="${_name}-${version}"
+makedepends="font-util font-misc-misc"
+depends="${makedepends}"
+short_desc="(URW)++ base 35 font set"
+maintainer="nyanpasu64 <nyanpasu64@tuta.io>"
+license="AGPL-3.0"
+homepage="https://github.com/ArtifexSoftware/urw-base35-fonts"
+distfiles=("https://github.com/ArtifexSoftware/${_name}/archive/refs/tags/${version}.tar.gz")
+checksum=e0d9b7f11885fdfdc4987f06b2aa0565ad2a4af52b22e5ebf79e1a98abd0ae2f
+font_dirs="/usr/share/fonts/${pkgname}"
+
+do_install() {
+	local _config _config_path
+
+	vmkdir "${font_dirs}"
+
+	install -vDm 644 fonts/*.otf -t "${DESTDIR}${font_dirs}"
+	install -vDm 644 appstream/*.xml -t "${DESTDIR}/usr/share/metainfo"
+
+	for _config in fontconfig/*.conf; do
+		_config_path="${DESTDIR}/usr/share/fontconfig/conf.avail/69-${_config##*/}"
+		install -vDm 644 "${_config}" "${_config_path}"
+	done
+}
